@@ -3,7 +3,7 @@ import { useQuery, useMutation } from "@apollo/client/react";
 import { AllAuthors, UpdateBirthYear } from "../queries.js";
 import { useField } from "../hooks/useField.js";
 
-const Authors = () => {
+const Authors = ({ token }) => {
   const { loading, error, data } = useQuery(AllAuthors);
   const { reset: resetName, ...name } = useField("text");
   const { reset: resetBirth, ...birth } = useField("number");
@@ -32,6 +32,8 @@ const Authors = () => {
   }
   const authors = data?.allAuthors || [];
 
+  console.log(token);
+
   return (
     <div>
       <h2>authors</h2>
@@ -46,33 +48,37 @@ const Authors = () => {
             <tr key={a.id}>
               <td>{a.name}</td>
               <td>{a.born}</td>
-              <td>{a.bookCount}</td>
+              <td>{a.bookCounts}</td>
             </tr>
           ))}
         </tbody>
       </table>
 
-      <div>
-        <h3>Set BirthYear</h3>
-        <form onSubmit={updateBirthYear}>
-          <div>
-            <label>
-              name
-              <select {...name}>
-                {authors.map((a) => (
-                  <option key={a.id} value={a.name}>
-                    {a.name}
-                  </option>
-                ))}
-              </select>
-            </label>
-          </div>
-          <div>
-            born <input {...birth} />
-          </div>
-          <button type="submit">update author</button>
-        </form>
-      </div>
+      {token !== null ? (
+        <div>
+          <h3>Set BirthYear</h3>
+          <form onSubmit={updateBirthYear}>
+            <div>
+              <label>
+                name
+                <select {...name}>
+                  {authors.map((a) => (
+                    <option key={a.id} value={a.name}>
+                      {a.name}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </div>
+            <div>
+              born <input {...birth} />
+            </div>
+            <button type="submit">update author</button>
+          </form>
+        </div>
+      ) : (
+        ""
+      )}
     </div>
   );
 };
