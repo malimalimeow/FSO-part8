@@ -4,7 +4,7 @@ import { useQuery, useMutation } from "@apollo/client/react";
 import { CreateBook, AllBooks, AllAuthors } from "../queries.js";
 import { useField } from "../hooks/useField.js";
 
-const NewBook = () => {
+const NewBook = ({ pickedGenre }) => {
   const [genres, setGenres] = useState([]);
   const { reset: resetTitle, ...title } = useField("text");
   const { reset: resetAuthor, ...author } = useField("text");
@@ -12,7 +12,11 @@ const NewBook = () => {
   const { reset: resetGenre, ...genre } = useField("text");
 
   const [createBook] = useMutation(CreateBook, {
-    refetchQueries: [{ query: AllBooks }, { query: AllAuthors }],
+    refetchQueries: [
+      { query: AllBooks },
+      { query: AllAuthors },
+      { query: AllBooks, variables: { genre: pickedGenre } },
+    ],
     onError: (error) => console.log(error.message),
   });
 
@@ -46,19 +50,27 @@ const NewBook = () => {
     <div>
       <form onSubmit={submit}>
         <div>
-          title
-          <input {...title} />
+          <label>
+            title
+            <input id="title-input" {...title} />
+          </label>
         </div>
         <div>
-          author
-          <input {...author} />
+          <label>
+            author
+            <input id="author-input" {...author} />
+          </label>
         </div>
         <div>
-          published
-          <input {...published} />
+          <label>
+            published
+            <input id="published-input" {...published} />
+          </label>
         </div>
         <div>
-          <input {...genre} />
+          <label>
+            <input id="genre-input" {...genre} />
+          </label>
           <button onClick={addGenre} type="button">
             add genre
           </button>

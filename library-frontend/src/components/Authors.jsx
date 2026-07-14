@@ -56,12 +56,12 @@ const Authors = ({ token }) => {
 
       {token !== null ? (
         <div>
-          <h3>Set BirthYear</h3>
+          <h3>Set birthyear</h3>
           <form onSubmit={updateBirthYear}>
             <div>
               <label>
                 name
-                <select {...name}>
+                <select name="name" {...name}>
                   {authors.map((a) => (
                     <option key={a.id} value={a.name}>
                       {a.name}
@@ -71,8 +71,12 @@ const Authors = ({ token }) => {
               </label>
             </div>
             <div>
-              born <input {...birth} />
+              <label>
+                born
+                <input id="born-input" {...birth} />
+              </label>
             </div>
+
             <button type="submit">update author</button>
           </form>
         </div>

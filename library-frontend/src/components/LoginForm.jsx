@@ -2,10 +2,12 @@ import { useField } from "../hooks/useField";
 import { useMutation } from "@apollo/client/react";
 import { LOGIN } from "../queries";
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 const LoginForm = ({ setToken }) => {
   const { reset: resetUser, ...username } = useField("text");
   const { reset: resetPw, ...password } = useField("password");
+  const [failed, setFailed] = useState(false);
   const navigate = useNavigate();
   const toAuthor = () => navigate("/");
 
@@ -16,7 +18,7 @@ const LoginForm = ({ setToken }) => {
       localStorage.setItem("library-user-token", token);
     },
     onError: (error) => {
-      console.log(error.message);
+      setFailed(true);
     },
   });
 
@@ -34,16 +36,31 @@ const LoginForm = ({ setToken }) => {
     resetPw();
   };
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setFailed(false);
+    }, 5000);
+
+    return () => clearTimeout(timer);
+  }, [failed]);
+
   return (
     <>
       <form onSubmit={toLogin}>
+        {failed && <p>login failed</p>}
         <div>
-          <input {...username} />
+          <label>
+            username
+            <input id="username-input" {...username} />
+          </label>
         </div>
         <div>
-          <input {...password} />
+          <label>
+            password
+            <input id="password-input" {...password} />
+          </label>
         </div>
-        <button type="submit">Login</button>
+        <button type="submit">login</button>
       </form>
     </>
   );
