@@ -3,6 +3,8 @@ import { gql } from "@apollo/client";
 import { useQuery, useMutation } from "@apollo/client/react";
 import { CreateBook, AllBooks, AllAuthors } from "../queries.js";
 import { useField } from "../hooks/useField.js";
+import { addAuthorToCache, addBookToCache } from "../utils/apolloCache.js";
+import { useApolloClient, useSubscription } from "@apollo/client/react";
 
 const NewBook = ({ pickedGenre }) => {
   const [genres, setGenres] = useState([]);
@@ -10,14 +12,10 @@ const NewBook = ({ pickedGenre }) => {
   const { reset: resetAuthor, ...author } = useField("text");
   const { reset: resetPublished, ...published } = useField("number");
   const { reset: resetGenre, ...genre } = useField("text");
-
+  const client = useApolloClient();
   const [createBook] = useMutation(CreateBook, {
-    refetchQueries: [
-      { query: AllBooks },
-      { query: AllAuthors },
-      { query: AllBooks, variables: { genre: pickedGenre } },
-    ],
     onError: (error) => console.log(error.message),
+    refetchQueries: [{ query: AllBooks, variables: { genre: pickedGenre } }],
   });
 
   const submit = async (event) => {

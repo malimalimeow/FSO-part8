@@ -35,6 +35,7 @@ const Books = ({ setPickedGenre, pickedGenre }) => {
   const books = data?.allBooks || [];
   const booksAll = dataAll?.allBooks || [];
   const toShowBooks = pickedGenre === null ? booksAll : books;
+
   let allGenres = [];
   if (booksAll.length !== 0) {
     booksAll.forEach((book) => {

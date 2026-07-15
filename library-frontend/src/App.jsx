@@ -4,8 +4,10 @@ import Books from "./components/Books";
 import NewBook from "./components/NewBook";
 import LoginForm from "./components/LoginForm";
 import { Route, Routes, Link } from "react-router-dom";
-import { useApolloClient } from "@apollo/client/react";
+import { useApolloClient, useSubscription } from "@apollo/client/react";
 import Recommendation from "./components/Recommendation";
+import { AllBooks, BOOK_ADDED } from "./queries";
+import { addAuthorToCache, addBookToCache } from "./utils/apolloCache";
 
 const App = () => {
   const [pickedGenre, setPickedGenre] = useState(null);
@@ -19,6 +21,18 @@ const App = () => {
     setToken(null);
     client.resetStore();
   };
+
+  useSubscription(BOOK_ADDED, {
+    onData: ({ data }) => {
+      const addedBook = data.data.bookAdded;
+      alert(`New Book ${addedBook.title} added`);
+      addAuthorToCache(client.cache, addedBook);
+      addBookToCache(client.cache, addedBook);
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
 
   return (
     <div>

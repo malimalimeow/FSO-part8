@@ -18,6 +18,7 @@ const Authors = ({ token }) => {
     updateBirth({
       variables: { name: name.value, born: Number(birth.value) },
     });
+    console.log("OK updated");
 
     resetName();
     resetBirth();
@@ -62,6 +63,7 @@ const Authors = ({ token }) => {
               <label>
                 name
                 <select name="name" {...name}>
+                  <option value="">-- Please select an author --</option>
                   {authors.map((a) => (
                     <option key={a.id} value={a.name}>
                       {a.name}
